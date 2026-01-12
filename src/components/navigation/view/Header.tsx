@@ -43,7 +43,7 @@ export default function Header() {
 
 	return (
 		<>
-			<div className="wrapper sticky top-0 z-100 w-full px-[28px] pt-[8px] pb-[8px] lg:pt-[12px] lg:pb-[10px] xl:px-[60px] 2xl:pt-[20px] 2xl:pb-[16px] bg-[var(--background)]/50 backdrop-blur-lg">
+			<div className="wrapper sticky top-0 z-100 w-full px-[28px] pt-[8px] pb-[8px] lg:pt-[12px] lg:pb-[10px] xl:px-[60px] 2xl:pt-[20px] 2xl:pb-[16px] bg-[var(--background)]/5 backdrop-blur-lg">
 				<header className="w-full h-[var(--header-height)] mx-auto flex items-center content-center justify-between">
 					<div className="logo-section flex items-center">
 						<Logo />

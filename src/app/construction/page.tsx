@@ -6,6 +6,7 @@ import CaruselBlock from "@/components/body_section/construction_page/view/Carus
 import PortfolioTitle from "@/components/body_section/construction_page/view/PortfolioTitleBlock"
 import DescriptionBlock from "@/components/body_section/home_page/view/DescriptionBlock"
 import { PortfolioTabsSection } from "@/components/portfolio_section/view/PortfolioSection"
+import { MainDescriptionConstraction } from "@/components/body_section/home_page/modal/data"
 
 export default function ConstructionPage() {
 	return (
@@ -50,7 +51,7 @@ export default function ConstructionPage() {
 			</div>
 
 			<CaruselBlock />
-			<DescriptionBlock />
+			<DescriptionBlock item={MainDescriptionConstraction}/>
 			<PortfolioTitle />
 			<PortfolioTabsSection />
 		</>

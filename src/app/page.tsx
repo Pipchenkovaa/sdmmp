@@ -7,6 +7,7 @@ import PageTitle from "@/components/body_section/home_page/view/PageTitle"
 import PortfolioTitle from "@/components/body_section/home_page/view/PortfolioTitleBlock"
 import MainCaruselBlock from "@/components/body_section/home_page/view/MainCaruselBlock"
 import GradientBlinds from "@/components/ui/GradientBlinds/GradientBlinds"
+import { MainDescription } from "@/components/body_section/home_page/modal/data"
 
 export default function Home() {
 	return (
@@ -36,7 +37,7 @@ export default function Home() {
 			</div>
 
 			<MainCaruselBlock />
-			<DescriptionBlock />
+			<DescriptionBlock item={MainDescription}/>
 			<PortfolioTitle />
 			<section className="w-full flex justify-center px-[28px] xl:px-[60px] py-[30px] lg:py-[48px]">
 				<div className="mx-auto w-full max-w-[1024px] min-w-0 flex flex-col gap-2 lg:gap-3 xl:gap-4">

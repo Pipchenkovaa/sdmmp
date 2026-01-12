@@ -23,9 +23,12 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Add CNAME
+        run: echo "sdm-mp.ru" > ./out/CNAME
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out   # для Next.js export
+          path: ./out
 
   deploy:
     needs: build

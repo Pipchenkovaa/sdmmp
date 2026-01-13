@@ -23,7 +23,8 @@ export default function Dots({
 					1
 				)
 				const width = Math.max(5, Math.round(5 + 43 * offset))
-				const isActive = currentPage ? currentPage === index : width > 5
+				const isActive =
+					currentPage !== undefined ? currentPage === index : width > 5
 
 				return (
 					<button
@@ -34,7 +35,9 @@ export default function Dots({
 						<div
 							className={cn(
 								"rounded-full h-[5px] min-w-[5px] xl:h-[6px] xl:min-w-[6px] transition-all duration-200",
-								isActive ? "bg-[var(--foreground)]" : "bg-[var(--dots-dark-color)]"
+								isActive
+									? "bg-[var(--foreground)]"
+									: "bg-[var(--dots-dark-color)]"
 							)}
 							style={{ width }}
 						/>

@@ -315,17 +315,25 @@ void main() {
 		const ro = new ResizeObserver(resize)
 		ro.observe(container)
 
-		const onPointerMove = (e: PointerEvent) => {
+		const setMouseFromClient = (clientX: number, clientY: number) => {
 			const rect = canvas.getBoundingClientRect()
 			const scale = (renderer as unknown as { dpr?: number }).dpr || 1
-			const x = (e.clientX - rect.left) * scale
-			const y = (rect.height - (e.clientY - rect.top)) * scale
+
+			const x = (clientX - rect.left) * scale
+			const y = (rect.height - (clientY - rect.top)) * scale
+
 			mouseTargetRef.current = [x, y]
-			if (mouseDampening <= 0) {
-				uniforms.iMouse.value = [x, y]
-			}
+			if (mouseDampening <= 0) uniforms.iMouse.value = [x, y]
+		}
+
+		const onPointerMove = (e: PointerEvent) => {
+			setMouseFromClient(e.clientX, e.clientY)
+		}
+		const onPointerDown = (e: PointerEvent) => {
+			setMouseFromClient(e.clientX, e.clientY)
 		}
 		canvas.addEventListener("pointermove", onPointerMove)
+		canvas.addEventListener("pointerdown", onPointerDown)
 
 		const loop = (t: number) => {
 			rafRef.current = requestAnimationFrame(loop)
@@ -357,6 +365,7 @@ void main() {
 		return () => {
 			if (rafRef.current) cancelAnimationFrame(rafRef.current)
 			canvas.removeEventListener("pointermove", onPointerMove)
+			canvas.removeEventListener("pointerdown", onPointerDown)
 			ro.disconnect()
 			if (canvas.parentElement === container) {
 				container.removeChild(canvas)

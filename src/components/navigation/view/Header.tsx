@@ -90,13 +90,13 @@ export default function Header() {
 			{/* mobile */}
 			<div
 				id="mobile-nav"
-				className={`lg:hidden fixed z-99 bg-[var(--background)]/70 inset-x-0 top-[67px] transition-all duration-200 ${
+				className={`lg:hidden fixed z-99 bg-[var(--background)]/5 inset-x-0 top-[67px] transition-all duration-200 ${
 					isOpen
 						? "opacity-100 translate-y-0 pointer-events-auto"
 						: "opacity-0 -translate-y-2 pointer-events-none"
 				}`}
 			>
-				<nav className="mx-auto rounded-xl bg-[var(--background)]/50 backdrop-blur-lg p-8 shadow-lg">
+				<nav className="mx-auto bg-[var(--background)]/5 backdrop-blur-lg p-8 shadow-lg">
 					<ul className="flex flex-col items-end gap-3">
 						{LINKS.map((l) =>
 							isActive(l.href) ? (

@@ -8,33 +8,78 @@ import Dots from "@/components/ui/Dots"
 import Badge from "../../../ui/Bange"
 import type { Props } from "../modal/types"
 import { useResponsiveSize } from "@/hooks/useResponsiveSize"
-// import ShinyText from "@/components/ui/ShinyText/ShinyText"
 
 export default function Carusel({ slides, className }: Props) {
 	const trackRef = useRef<HTMLDivElement | null>(null)
 	const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 	const [index, setIndex] = useState(0)
 	const [progress, setProgress] = useState(0)
-	const total = useMemo(() => Math.max(1, slides?.length ?? 0), [slides])
 
+	const total = useMemo(() => Math.max(1, slides?.length ?? 0), [slides])
 	const badgeSize = useResponsiveSize()
+	const setItemRef = useCallback(
+		(i: number) => (el: HTMLDivElement | null) => {
+			itemRefs.current[i] = el
+		},
+		[]
+	)
+	const getLeftForIndex = useCallback((i: number) => {
+		const track = trackRef.current
+		const slide = itemRefs.current[i]
+		if (!track || !slide) return null
+
+		const trackRect = track.getBoundingClientRect()
+		const slideRect = slide.getBoundingClientRect()
+		return track.scrollLeft + (slideRect.left - trackRect.left)
+	}, [])
+
+	const getAllLefts = useCallback(() => {
+		const track = trackRef.current
+		if (!track) return []
+
+		const trackRect = track.getBoundingClientRect()
+		return itemRefs.current.map((slide) => {
+			if (!slide) return 0
+			const r = slide.getBoundingClientRect()
+			return track.scrollLeft + (r.left - trackRect.left)
+		})
+	}, [])
 
 	const handleScroll = useCallback(() => {
-		const el = trackRef.current
-		const first = itemRefs.current[0]
-		if (!el || !first) return
-		const w = first.offsetWidth
-		const i = Math.round(el.scrollLeft / Math.max(1, w))
-		setIndex(Math.min(total - 1, Math.max(0, i)))
-		setProgress(el.scrollLeft / Math.max(1, w))
-	}, [total])
+		const track = trackRef.current
+		if (!track) return
 
-	const goTo = useCallback((i: number) => {
-		const el = trackRef.current
-		const target = itemRefs.current[i]
-		if (!el || !target) return
-		el.scrollTo({ left: target.offsetLeft, behavior: "smooth" })
-	}, [])
+		const lefts = getAllLefts()
+		if (!lefts.length) return
+
+		const cur = track.scrollLeft
+		let nearest = 0
+		let best = Infinity
+		for (let i = 0; i < lefts.length; i++) {
+			const d = Math.abs(lefts[i] - cur)
+			if (d < best) {
+				best = d
+				nearest = i
+			}
+		}
+
+		setIndex(nearest)
+		const step = lefts.length > 1 ? Math.max(1, lefts[1] - lefts[0]) : 1
+		setProgress(cur / step)
+	}, [getAllLefts])
+
+	const goTo = useCallback(
+		(i: number) => {
+			const track = trackRef.current
+			if (!track) return
+
+			const left = getLeftForIndex(i)
+			if (left == null) return
+
+			track.scrollTo({ left, behavior: "smooth" })
+		},
+		[getLeftForIndex]
+	)
 
 	useEffect(() => {
 		const onResize = () => goTo(index)
@@ -58,9 +103,7 @@ export default function Carusel({ slides, className }: Props) {
 				{slides.map((s, i) => (
 					<div
 						key={s.id}
-						ref={(el) => {
-							if (el) itemRefs.current[i] = el
-						}}
+						ref={setItemRef(i)}
 						className="basis-full shrink-0 snap-start p-2 md:p-3"
 					>
 						<div
